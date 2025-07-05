@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- This code developed by Md Morshed Ali -->
+    <meta charset="UTF-8" />
+    <title>BITCODE Manager Lottery</title>
+    <style>
+      /* This code developed by Md Morshed Ali */
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #74ebd5, #acb6e5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: auto;
+      }
+
+      /* This code developed by Md Morshed Ali */
+      #container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        width: 420px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* This code developed by Md Morshed Ali */
+      h2 {
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      #memberList,
+      #resultList {
+        /* This code developed by Md Morshed Ali */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 0;
+        margin: 0 0 20px 0;
+        width: 100%;
+        list-style: none;
+      }
+
+      /* This code developed by Md Morshed Ali */
+      #memberList li,
+      #resultList li {
+        background: #f0f0f0;
+        padding: 10px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      #resultList li {
+        /* This code developed by Md Morshed Ali */
+        animation: fadeIn 0.8s ease;
+        background: #d2f8d2;
+      }
+
+      @keyframes fadeIn {
+        /* This code developed by Md Morshed Ali */
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* This code developed by Md Morshed Ali */
+      button {
+        padding: 12px 20px;
+        font-size: 16px;
+        background: linear-gradient(45deg, #ff6ec4, #7873f5);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      /* This code developed by Md Morshed Ali */
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      #loading {
+        display: none;
+        font-weight: bold;
+        margin: 10px 0;
+        color: #555;
+      }
+
+      /* This code developed by Md Morshed Ali */
+      #logo {
+        width: 109px;
+        height: 36px;
+        padding-top: 50px;
+      }
+
+      #title {
+        margin-bottom: 30px;
+      }
+
+      #congratulations {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4caf50;
+        display: none;
+        margin-top: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- This code developed by Md Morshed Ali -->
+    <div id="container">
+      <img
+        id="logo"
+        src="https://bitcode.pro/wp-content/uploads/2024/03/Bit-Code-Technologies-FZ-LLC.png"
+        alt="BITCODE Logo"
+      />
+      <h2 id="title">BITCODE Manager Lottery</h2>
+
+      <ul id="memberList"></ul>
+
+      <!-- This code developed by Md Morshed Ali -->
+      <div id="loading">Drawing...</div>
+      <button onclick="startLottery()">Start Lottery</button>
+
+      <h2>📋 Assigned Months</h2>
+      <ul id="resultList"></ul>
+
+      <div id="congratulations">
+        🎉 Congratulations! The lottery is complete! 🎉
+      </div>
+    </div>
+
+    <script>
+      // This code developed by Md Morshed Ali
+      const names = [
+        "Abdul Malek",
+        "Oyes",
+        "Morshed",
+        "Kamruzzaman",
+        "Almizan",
+        "Hozaifa",
+        "Abdur Rouf",
+        "Hazrat",
+        "Limon",
+        "Raihan",
+        "Naim",
+        "Abdul Ahad",
+      ];
+
+      // This code developed by Md Morshed Ali
+      const months = [];
+      const start = new Date(2025, 5); // June 2025
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(start.getFullYear(), start.getMonth() + i);
+        const monthLabel = date.toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        });
+        months.push(monthLabel);
+      }
+
+      // This code developed by Md Morshed Ali
+      let drawCount = 0;
+      let firstWinner = null;
+
+      const memberList = document.getElementById("memberList");
+      const resultList = document.getElementById("resultList");
+      const loading = document.getElementById("loading");
+      const button = document.querySelector("button");
+      const congratulations = document.getElementById("congratulations");
+
+      // This code developed by Md Morshed Ali
+      function populateMemberList() {
+        memberList.innerHTML = "";
+        names.forEach((name) => {
+          const li = document.createElement("li");
+          li.textContent = name;
+          memberList.appendChild(li);
+        });
+      }
+
+      // This code developed by Md Morshed Ali
+      async function startLottery() {
+        if (names.length === 0 || drawCount >= months.length) {
+          alert("🎯 All team members and months have been assigned.");
+          return;
+        }
+
+        button.disabled = true;
+        loading.style.display = "block";
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        const index = Math.floor(Math.random() * names.length);
+        const selectedName = names.splice(index, 1)[0];
+        const assignedMonth = months[drawCount++];
+
+        // This code developed by Md Morshed Ali
+        const resultItem = document.createElement("li");
+        resultItem.innerHTML = `✔️ <strong>${assignedMonth}</strong><br>${selectedName}`;
+        resultList.appendChild(resultItem);
+
+        populateMemberList();
+
+        loading.style.display = "none";
+        button.disabled = false;
+
+        if (drawCount === 1) {
+          firstWinner = { name: selectedName, month: assignedMonth };
+        }
+
+        // This code developed by Md Morshed Ali
+        if (drawCount >= months.length) {
+          congratulations.textContent = `🎉 Congratulations! ${firstWinner.name} for ${firstWinner.month} manager. The lottery is complete! 🎉`;
+          congratulations.style.display = "block";
+        }
+      }
+
+      populateMemberList(); // This code developed by Md Morshed Ali
+    </script>
+  </body>
+</html>
