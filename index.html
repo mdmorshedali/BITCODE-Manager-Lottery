@@ -1,239 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- This code developed by Md Morshed Ali -->
-    <meta charset="UTF-8" />
-    <title>BITCODE Manager Lottery</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bit Code Technologies - Premium Manager Draw</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-      /* This code developed by Md Morshed Ali */
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #74ebd5, #acb6e5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: auto;
-      }
-
-      /* This code developed by Md Morshed Ali */
-      #container {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        width: 420px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      /* This code developed by Md Morshed Ali */
-      h2 {
-        margin-bottom: 10px;
-        color: #333;
-      }
-
-      #memberList,
-      #resultList {
-        /* This code developed by Md Morshed Ali */
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding: 0;
-        margin: 0 0 20px 0;
-        width: 100%;
-        list-style: none;
-      }
-
-      /* This code developed by Md Morshed Ali */
-      #memberList li,
-      #resultList li {
-        background: #f0f0f0;
-        padding: 10px;
-        border-radius: 6px;
-        text-align: center;
-        font-weight: bold;
-      }
-
-      #resultList li {
-        /* This code developed by Md Morshed Ali */
-        animation: fadeIn 0.8s ease;
-        background: #d2f8d2;
-      }
-
-      @keyframes fadeIn {
-        /* This code developed by Md Morshed Ali */
-        from {
-          opacity: 0;
-          transform: scale(0.9);
+        :root {
+            --primary: #0076ff;
+            --secondary: #e3f2fd;
+            --success: #2ecc71;
+            --dark: #1e293b;
+            --white: #ffffff;
         }
-        to {
-          opacity: 1;
-          transform: scale(1);
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
-      }
 
-      /* This code developed by Md Morshed Ali */
-      button {
-        padding: 12px 20px;
-        font-size: 16px;
-        background: linear-gradient(45deg, #ff6ec4, #7873f5);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        margin-bottom: 20px;
-      }
+        .header { text-align: center; margin-bottom: 30px; animation: fadeIn 1s; }
+        .logo { width: 220px; }
 
-      /* This code developed by Md Morshed Ali */
-      button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      }
+        .main-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 650px;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+        }
 
-      #loading {
-        display: none;
-        font-weight: bold;
-        margin: 10px 0;
-        color: #555;
-      }
+        .pool-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #adb5bd;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
 
-      /* This code developed by Md Morshed Ali */
-      #logo {
-        width: 109px;
-        height: 36px;
-        padding-top: 50px;
-      }
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 40px;
+        }
 
-      #title {
-        margin-bottom: 30px;
-      }
+        .emp-tag {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 12px 5px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 2px solid transparent;
+            transition: 0.4s;
+        }
 
-      #congratulations {
-        font-size: 18px;
-        font-weight: bold;
-        color: #4caf50;
-        display: none;
-        margin-top: 20px;
-        text-align: center;
-      }
+        .emp-tag.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0,118,255,0.2);
+            animation: pulse 1s infinite alternate;
+        }
+
+        .emp-tag.used {
+            opacity: 0.3;
+            background: #eee;
+            color: #999;
+            transform: scale(0.9);
+        }
+
+        .draw-panel {
+            background: #f1f5f9;
+            padding: 30px;
+            border-radius: 25px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .month-display {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        #draw-btn {
+            background: linear-gradient(135deg, #0076ff 0%, #00d2ff 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,118,255,0.3);
+        }
+
+        #draw-btn:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0,118,255,0.4);
+        }
+
+        #draw-btn:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
+
+        .result-container {
+            margin-top: 30px;
+            display: none;
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .congrats-text {
+            color: var(--success);
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .winner-name {
+            font-size: 3rem;
+            color: var(--dark);
+            font-weight: 900;
+            margin: 10px 0;
+            text-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+
+        .manager-badge {
+            display: inline-block;
+            background: #ffd700;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .prison-box {
+            width: 140px;
+            height: 140px;
+            margin: 25px auto;
+            border: 8px solid #334155;
+            background: #fff;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .bars {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(90deg, transparent, transparent 18px, #334155 18px, #334155 26px);
+            z-index: 2;
+        }
+
+        .prisoner { font-size: 80px; line-height: 140px; animation: breath 2s infinite ease-in-out; }
+
+        .history-card {
+            width: 100%;
+            max-width: 650px;
+            margin-top: 30px;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            display: none;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8fafc; padding: 20px; text-align: left; color: #64748b; font-size: 0.8rem; text-transform: uppercase; }
+        td { padding: 18px 20px; border-top: 1px solid #f1f5f9; font-weight: 700; }
+        .month-name { color: var(--primary); }
+
+        @keyframes pulse { to { transform: scale(1.05); } }
+        @keyframes breath { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(0.9) translateY(10px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 600px) { .employee-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
-  </head>
-  <body>
-    <!-- This code developed by Md Morshed Ali -->
-    <div id="container">
-      <img
-        id="logo"
-        src="https://bitcode.pro/wp-content/uploads/2024/03/Bit-Code-Technologies-FZ-LLC.png"
-        alt="BITCODE Logo"
-      />
-      <h2 id="title">BITCODE Manager Lottery</h2>
+</head>
+<body>
 
-      <ul id="memberList"></ul>
+    <div class="header">
+        <img src="https://bitcode.pro/wp-content/uploads/2024/03/Bit-Code-Technologies-FZ-LLC.png" alt="Bit Code Logo" class="logo">
+    </div>
 
-      <!-- This code developed by Md Morshed Ali -->
-      <div id="loading">Drawing...</div>
-      <button onclick="startLottery()">Start Lottery</button>
+    <div class="main-card">
+        <div class="pool-title">Available Employees</div>
+        <div class="employee-grid" id="emp-grid"></div>
 
-      <h2>📋 Assigned Months</h2>
-      <ul id="resultList"></ul>
+        <div class="draw-panel">
+            <div id="month-target" class="month-display">MAY 2026</div>
+            <button id="draw-btn" onclick="fireLottery()">PICK A MANAGER 🎰</button>
 
-      <div id="congratulations">
-        🎉 Congratulations! The lottery is complete! 🎉
-      </div>
+            <div id="result-view" class="result-container">
+                <span class="congrats-text">🎊 CONGRATULATIONS! 🎊</span>
+                <div id="winner-name" class="winner-name"></div>
+                <div class="manager-badge">OFFICIAL MANAGER 🎖️</div>
+                
+                <div id="joke-anim" style="display: none;">
+                    <div class="prison-box">
+                        <div class="bars"></div>
+                        <div class="prisoner">🤦‍♂️</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="history-box" class="history-card">
+        <table>
+            <thead>
+                <tr><th>Month</th><th>Manager Name</th></tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+        </table>
     </div>
 
     <script>
-      // This code developed by Md Morshed Ali
-      const names = [
-        "Abdul Malek",
-        "Oyes",
-        "Morshed",
-        "Kamruzzaman",
-        "Almizan",
-        "Hozaifa",
-        "Abdur Rouf",
-        "Hazrat",
-        "Limon",
-        "Raihan",
-        "Naim",
-        "Abdul Ahad",
-      ];
+        const employees = ["Hazrat Talha", "Kamruzzaman", "A. Rouf", "Oyes", "Morshed", "Al Mizan", "Hozaifa", "Raihan", "Naim", "Limon"];
+        const months = [ "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"];
+        
+        let pool = [...employees];
+        let step = 0;
 
-      // This code developed by Md Morshed Ali
-      const months = [];
-      const start = new Date(2025, 5); // June 2025
-      for (let i = 0; i < 12; i++) {
-        const date = new Date(start.getFullYear(), start.getMonth() + i);
-        const monthLabel = date.toLocaleString("default", {
-          month: "long",
-          year: "numeric",
-        });
-        months.push(monthLabel);
-      }
+        const grid = document.getElementById('emp-grid');
+        grid.innerHTML = pool.map(name => `<div class="emp-tag" id="tag-${name.replace(/\s/g, '')}">${name}</div>`).join('');
 
-      // This code developed by Md Morshed Ali
-      let drawCount = 0;
-      let firstWinner = null;
+        function fireLottery() {
+            if (step >= months.length) return;
 
-      const memberList = document.getElementById("memberList");
-      const resultList = document.getElementById("resultList");
-      const loading = document.getElementById("loading");
-      const button = document.querySelector("button");
-      const congratulations = document.getElementById("congratulations");
+            const btn = document.getElementById('draw-btn');
+            const resultView = document.getElementById('result-view');
+            const winnerName = document.getElementById('winner-name');
+            const joke = document.getElementById('joke-anim');
+            const historyBox = document.getElementById('history-box');
+            const historyBody = document.getElementById('history-body');
+            const monthTarget = document.getElementById('month-target');
 
-      // This code developed by Md Morshed Ali
-      function populateMemberList() {
-        memberList.innerHTML = "";
-        names.forEach((name) => {
-          const li = document.createElement("li");
-          li.textContent = name;
-          memberList.appendChild(li);
-        });
-      }
+            btn.disabled = true;
+            btn.innerText = "ROLLING...";
+            resultView.style.display = "none";
+            joke.style.display = "none";
 
-      // This code developed by Md Morshed Ali
-      async function startLottery() {
-        if (names.length === 0 || drawCount >= months.length) {
-          alert("🎯 All team members and months have been assigned.");
-          return;
+            let shuffleCount = 0;
+            let shuffleInterval = setInterval(() => {
+                const tags = document.querySelectorAll('.emp-tag:not(.used)');
+                tags.forEach(t => t.classList.remove('active'));
+                const randomTag = tags[Math.floor(Math.random() * tags.length)];
+                if(randomTag) randomTag.classList.add('active');
+                shuffleCount++;
+                if(shuffleCount > 10) clearInterval(shuffleInterval);
+            }, 100);
+
+            setTimeout(() => {
+                const rIdx = Math.floor(Math.random() * pool.length);
+                const chosen = pool.splice(rIdx, 1)[0];
+
+                const tagElement = document.getElementById(`tag-${chosen.replace(/\s/g, '')}`);
+                if(tagElement) {
+                    tagElement.classList.remove('active');
+                    tagElement.classList.add('used');
+                }
+
+                winnerName.innerText = chosen;
+                resultView.style.display = "block";
+
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#0076ff', '#00d2ff', '#2ecc71', '#ffd700']
+                });
+
+                if(step === 0) {
+                    joke.style.display = "block";
+                }
+
+                historyBox.style.display = "block";
+                const row = `<tr><td class="month-name">${months[step]} 2026</td><td>${chosen}</td></tr>`;
+                historyBody.insertAdjacentHTML('afterbegin', row);
+
+                step++;
+
+                if (step < months.length) {
+                    btn.disabled = false;
+                    btn.innerText = "NEXT DRAW 🎰";
+                    monthTarget.innerText = `${months[step].toUpperCase()} 2026`;
+                } else {
+                    btn.innerText = "SELECTION COMPLETE ✅";
+                    monthTarget.innerText = "DONE";
+                }
+            }, 1500);
         }
-
-        button.disabled = true;
-        loading.style.display = "block";
-
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        const index = Math.floor(Math.random() * names.length);
-        const selectedName = names.splice(index, 1)[0];
-        const assignedMonth = months[drawCount++];
-
-        // This code developed by Md Morshed Ali
-        const resultItem = document.createElement("li");
-        resultItem.innerHTML = `✔️ <strong>${assignedMonth}</strong><br>${selectedName}`;
-        resultList.appendChild(resultItem);
-
-        populateMemberList();
-
-        loading.style.display = "none";
-        button.disabled = false;
-
-        if (drawCount === 1) {
-          firstWinner = { name: selectedName, month: assignedMonth };
-        }
-
-        // This code developed by Md Morshed Ali
-        if (drawCount >= months.length) {
-          congratulations.textContent = `🎉 Congratulations! ${firstWinner.name} for ${firstWinner.month} manager. The lottery is complete! 🎉`;
-          congratulations.style.display = "block";
-        }
-      }
-
-      populateMemberList(); // This code developed by Md Morshed Ali
     </script>
-  </body>
+</body>
 </html>
